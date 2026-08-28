@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Projetos</title>
+</head>
+<body>
+    <h1>Projetos</h1>
+    <a href="{% url 'criar_projeto' %}">+ Novo Projeto</a>
+
+    <table border="1" cellpadding="5">
+        <tr>
+            <th>Título</th>
+            <th>Cliente</th>
+            <th>Tipo de Serviço</th>
+            <th>Status</th>
+            <th>Prazo</th>
+            <th>Responsável</th>
+            <th>Ações</th>
+        </tr>
+        {% for projeto in projetos %}
+        <tr>
+            <td>{{ projeto.titulo }}</td>
+            <td>{{ projeto.cliente.nome }}</td>
+            <td>{{ projeto.tipo_servico }}</td>
+            <td>{{ projeto.get_status_display }}</td>
+            <td>{{ projeto.prazo_vencimento }}</td>
+            <td>{{ projeto.responsavel }}</td>
+            <td>
+                <a href="{% url 'editar_projeto' projeto.pk %}">Editar</a> |
+                <a href="{% url 'excluir_projeto' projeto.pk %}">Excluir</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="7">Nenhum projeto cadastrado.</td></tr>
+        {% endfor %}
+    </table>
+
+    <br>
+    <a href="{% url 'lista_clientes' %}">Ver Clientes</a>
+</body>
+</html>

@@ -1,37 +1,24 @@
-# ADR 001 — Proteção do campo data_vencimento
+# ADR 001 - Uso do Django como framework backend
+
+## Status
+Aceito
 
 ## Contexto
-No sistema de gestão ambiental da Moriah Geotecnologia, cada projeto/processo
-possui prazos importantes junto a órgãos ambientais (ex: renovação de licença,
-entrega de laudo). O campo `data_vencimento` aceitava, hoje, qualquer data,
-inclusive uma data anterior à data de início do processo (`data_inicio`) ou
-uma data já vencida no momento do cadastro. Isso é um problema porque o
-sistema depende desse campo para gerar alertas de vencimento — um dado
-inconsistente compromete todo o controle de prazos, que é uma das
-funcionalidades centrais do projeto.
+Precisávamos escolher um framework backend para o sistema de 
+"caderno digital de clientes". A equipe tem familiaridade limitada 
+com backend e o prazo do Marco 1 é curto.
 
 ## Decisão
-Vamos validar o campo `data_vencimento` usando uma `@property` com setter na
-classe do processo/projeto ambiental, garantindo que:
-- a data de vencimento não pode ser anterior à data de início do processo;
-- a data de vencimento não pode ser uma data já passada no momento do cadastro.
+Usar Django (Python) com SQLite no ambiente de desenvolvimento.
 
-Caso alguma dessas regras seja violada, o setter levanta um `ValueError`,
-impedindo que o dado inválido seja salvo no banco.
+## Justificativa
+- Django tem ORM embutido, reduzindo a necessidade de escrever SQL manual.
+- Curva de aprendizado documentada e com muito material em português.
+- SQLite não exige configuração de servidor de banco, facilitando o setup inicial.
+- Alternativas consideradas: Flask (mais leve, mas exigiria montar mais 
+  estrutura manualmente) e Node/Express (equipe tem menos experiência).
 
-## Alternativa descartada
-Consideramos validar essa regra apenas no formulário da tela de cadastro
-(front-end). Descartamos essa opção porque não protegeria o dado quando o
-processo for criado por outros caminhos, como no Django Admin, em scripts de
-importação de planilhas antigas, ou em testes automatizados — cenários comuns
-neste projeto, já que uma das motivações é migrar dados que hoje estão
-dispersos em planilhas e e-mails.
-
-## Consequência
-O objeto responsável pelo processo ambiental passa a se proteger sozinho,
-garantindo prazos coerentes independente de onde o registro seja criado. Em
-troca, o código da classe fica um pouco maior, pois a lógica de validação
-passa a viver dentro do setter em vez de apenas na interface.
-
-## Commit
-[preencher depois de fazer o commit da proteção no código]
+## Consequências
+- Positivo: desenvolvimento mais rápido no início.
+- Negativo: será necessário migrar para PostgreSQL/MySQL antes de produção,
+  pois SQLite não é recomendado para múltiplos usuários simultâneos.

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Confirmar Exclusão</title>
+</head>
+<body>
+    <h1>Confirmar exclusão</h1>
+    <p>Tem certeza que deseja excluir "<strong>{{ objeto }}</strong>"?</p>
+
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Sim, excluir</button>
+        <a href="javascript:history.back()">Cancelar</a>
+    </form>
+</body>
+</html>
